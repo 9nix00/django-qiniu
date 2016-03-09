@@ -1,0 +1,5 @@
+# add your package for development
+django
+qiniu
+django-qiniu-storage
+django-account-helper
