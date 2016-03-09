@@ -32,7 +32,7 @@ Config
 
 
 
-#. set qiniu config follow qiniu-storage document `Configurations <https://github.com/glasslion/django-qiniu-storage/blob/master/README.md#Configurations>`.
+#. set qiniu config follow qiniu-storage document `Configurations <https://github.com/glasslion/django-qiniu-storage/blob/master/README.md#Configurations>`_.
 
 #. edit settings.py.
 
