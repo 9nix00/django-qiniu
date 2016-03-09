@@ -42,7 +42,6 @@ Config
 
     QINIU_PREVIEW_EXPIRE = 300         # 300 seconds,default is 3600 if not set
 
-
 #. add `account_helper.middleware.CurrentUserMiddleware` in  MIDDLEWARE_CLASSES
 
 
