@@ -31,6 +31,7 @@ Config
 ------------------
 
 
+#. add `account_helper.middleware.CurrentUserMiddleware` in  MIDDLEWARE_CLASSES
 
 #. set qiniu config follow qiniu-storage document `Configurations <https://github.com/glasslion/django-qiniu-storage/blob/master/README.md#Configurations>`_.
 
@@ -42,7 +43,6 @@ Config
 
     QINIU_PREVIEW_EXPIRE = 300         # 300 seconds,default is 3600 if not set
 
-#. add `account_helper.middleware.CurrentUserMiddleware` in  MIDDLEWARE_CLASSES
 
 
 
