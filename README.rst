@@ -22,7 +22,7 @@ Install
 
 .. code-block::
 
-    pip install django_qiniu
+    pip install django-qiniu
 
 
 
