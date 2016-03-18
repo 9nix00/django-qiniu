@@ -1,13 +1,12 @@
 django qiniu
 ========================
 
-qiniu file(image) upload helper utils
+qiniu file(image) upload helper utils for `Django <https://github.com/django/django>`_
 
 
 Requirements
 ------------------
 
-* `Django <https://github.com/django/django>`_
 * `Qiniu SDK <https://github.com/qiniu/python-sdk>`_
 * `Django-Qiniu-Storage <https://github.com/glasslion/django-qiniu-storage>`_
 * `Django-Account-Helper <https://github.com/9nix00/django-account-helper>`_
