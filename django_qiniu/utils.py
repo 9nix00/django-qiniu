@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from account_helper.middleware import get_current_user
+from account_helper.middleware import get_current_user_id
 from django.utils import timezone
 from django.conf import settings
 from hashlib import sha1
