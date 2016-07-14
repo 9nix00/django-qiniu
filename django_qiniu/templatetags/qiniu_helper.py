@@ -30,6 +30,11 @@ def qiniu_preview(url, *args, **kwargs):
     width = kwargs.get('width', 75)
     height = kwargs.get('height', 75)
     scale = kwargs.get('scale', True)
+    domain = kwargs.get('domain', True)
+
+    if domain:
+        url = '{}://{}/{}'.format('http' if get_qiniu_config('QINIU_SECURE_URL') is not True else 'https',
+                                  get_qiniu_config('QINIU_BUCKET_DOMAIN'), url)
 
     if scale:
         return qiniu_private('{}?imageView2/{}/w/{}/h/{}'.format(url, '2', width, height))
