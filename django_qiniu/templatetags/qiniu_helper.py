@@ -10,7 +10,7 @@ register = template.Library()
 
 def qiniu_private(base_url):
     """
-    获取私有url
+    get private resource
     """
     q = Auth(get_qiniu_config('QINIU_ACCESS_KEY'), get_qiniu_config('QINIU_SECRET_KEY'))
     expire = 3600 if not hasattr(settings, 'QINIU_PREVIEW_EXPIRE') else settings.QINIU_PREVIEW_EXPIRE
@@ -36,9 +36,17 @@ def qiniu_preview(url, *args, **kwargs):
         url = '{}://{}/{}'.format('http' if get_qiniu_config('QINIU_SECURE_URL') is not True else 'https',
                                   get_qiniu_config('QINIU_BUCKET_DOMAIN'), url)
 
+    # use original image
+    if width == 'auto' and height == 'auto':
+        return qiniu_private(url)
+
     if scale:
-        return qiniu_private('{}?imageView2/{}/w/{}/h/{}'.format(url, '2', width, height))
+        width_str = '/w/{}'.format(width) if width != 'auto' else ''
+        height_str = '/h/{}'.format(height) if height != 'auto' else ''
+        return qiniu_private('{}?imageView2/{}{}{}'.format(url, '2', width_str, height_str))  # mode=2,limit width and height
     else:
-        return qiniu_private('{}?imageMogr2/thumbnail/{}x{}!'.format(url, width, height))
+        width_str = width if width != 'auto' else ''
+        height_str = height if height != 'auto' else ''
+        return qiniu_private('{}?imageMogr2/thumbnail/{}x{}!'.format(url, width_str, height_str))
 
     pass

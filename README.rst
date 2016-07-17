@@ -76,7 +76,10 @@ by default, we use weui as default our theme. so default size is 75x75
     {# set width,height and scale #}
     <li class="weui_uploader_file" style="background:url({% qiniu_preview image_url width=80 height=90 scale=False %})"></li>
     {# disable add domain-url when request %}
-    <li class="weui_uploader_file" style="background:url({% qiniu_preview image_url width=80 height=90 scale=False domain=False %})"></li>
+    <li class="weui_uploader_file" style="background:url({% qiniu_preview image_url width=80 height=90 domain=False %})"></li>
+    {# auto scale %}
+    <li class="weui_uploader_file" style="background:url({% qiniu_preview image_url width='auto' height=90 %})"></li>
+
 
 
 
