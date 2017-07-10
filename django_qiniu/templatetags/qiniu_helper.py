@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import requests
+from django import template
+from django.conf import settings
+from django.core.cache import cache
 from qiniu import Auth
 from qiniustorage.backends import get_qiniu_config
-from django.conf import settings
-from django import template
-
-import requests
 
 register = template.Library()
 
@@ -14,9 +14,20 @@ def qiniu_private(base_url):
     """
     get private resource
     """
-    q = Auth(get_qiniu_config('QINIU_ACCESS_KEY'), get_qiniu_config('QINIU_SECRET_KEY'))
-    expire = 3600 if not hasattr(settings, 'QINIU_PREVIEW_EXPIRE') else settings.QINIU_PREVIEW_EXPIRE
+    cache_key = 'st:qiniu:' + base_url
+
+    cache_value = cache.get(cache_key)
+    if cache_value:
+        return cache_value
+
+    q = Auth(get_qiniu_config('QINIU_ACCESS_KEY'),
+             get_qiniu_config('QINIU_SECRET_KEY'))
+    expire = 3600 if not hasattr(settings,
+                                 'QINIU_PREVIEW_EXPIRE') else settings.QINIU_PREVIEW_EXPIRE
     private_url = q.private_download_url(base_url, expires=expire)
+
+    cache.set(cache_key, private_url, timeout=max(10, expire - 10))
+
     return private_url
 
 
@@ -35,7 +46,8 @@ def qiniu_preview(url, *args, **kwargs):
     domain = kwargs.get('domain', True)
 
     if domain:
-        url = '{}://{}/{}'.format('http' if get_qiniu_config('QINIU_SECURE_URL') is not True else 'https',
+        url = '{}://{}/{}'.format('http' if get_qiniu_config(
+            'QINIU_SECURE_URL') is not True else 'https',
                                   get_qiniu_config('QINIU_BUCKET_DOMAIN'), url)
 
     # use original image
@@ -45,11 +57,14 @@ def qiniu_preview(url, *args, **kwargs):
     if scale:
         width_str = '/w/{}'.format(width) if width != 'auto' else ''
         height_str = '/h/{}'.format(height) if height != 'auto' else ''
-        return qiniu_private('{}?imageView2/{}{}{}'.format(url, '2', width_str, height_str))  # mode=2,limit width and height
+        return qiniu_private('{}?imageView2/{}{}{}'.format(url, '2', width_str,
+                                                           height_str))  # mode=2,limit width and height
     else:
         width_str = width if width != 'auto' else ''
         height_str = height if height != 'auto' else ''
-        return qiniu_private('{}?imageMogr2/thumbnail/{}x{}!'.format(url, width_str, height_str))
+        return qiniu_private(
+            '{}?imageMogr2/thumbnail/{}x{}!'.format(url, width_str,
+                                                    height_str))
 
     pass
 
@@ -70,7 +85,8 @@ def qiniu_image_info(url, *args, **kwargs):
     domain = kwargs.get('domain', True)
 
     if domain:
-        url = '{}://{}/{}'.format('http' if get_qiniu_config('QINIU_SECURE_URL') is not True else 'https',
+        url = '{}://{}/{}'.format('http' if get_qiniu_config(
+            'QINIU_SECURE_URL') is not True else 'https',
                                   get_qiniu_config('QINIU_BUCKET_DOMAIN'), url)
 
     url = qiniu_private('{}?imageInfo'.format(url))
@@ -97,6 +113,7 @@ def qiniu_image_scale_height(url, width, *args, **kwargs):
     image_width = info.get('width')
     ratio = width / image_width
 
-    print((info.get('width'), info.get('height'), width, int(ratio * info.get('height'))))
+    print((info.get('width'), info.get('height'), width,
+           int(ratio * info.get('height'))))
 
     return int(ratio * info.get('height'))
